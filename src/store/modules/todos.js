@@ -17,11 +17,24 @@ const getters = {
   allTodos: (state) => state.todos,
 };
 
-const actions = {};
+const actions = {
+  addTodo({ commit }, title) {
+    const newTodo = {
+      id: Date.now(), // pakai timestamp sebagai id
+      title,
+    };
+    commit("ADD_TODO", newTodo);
+  },
+};
 
-const mutations = {};
+const mutations = {
+  ADD_TODO(state, todo) {
+    state.todos.push(todo);
+  },
+};
 
 export default {
+  namespaced: true,
   state,
   getters,
   actions,
