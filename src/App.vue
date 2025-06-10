@@ -2,26 +2,27 @@
   <div class="todos-container">
     <h3>Todos</h3>
     
-    <!-- Form untuk menambah Todo -->
-    <form @submit.prevent="addTodo">
-      <input v-model="newTodoTitle" placeholder="Add a new todo" />
-      <button type="submit">Add Todo</button>
-    </form>
+    <TodoForm 
+      :new-todo-title="newTodoTitle"
+      @update:new-todo-title="newTodoTitle = $event"
+      @submit="handleAddTodo"
+    />
 
-    <!-- Daftar Todo -->
-    <div class="todos">
-      <div class="todo" v-for="todo in allTodos" :key="todo.id">
-        {{ todo.title }}
-      </div>
-    </div>
+    <TodoList :todos="allTodos" />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import TodoForm from './components/TodoForm.vue';
+import TodoList from './components/TodoList.vue';
 
 export default {
-  name: "TodosComponent",
+  name: "App",
+  components: {
+    TodoForm,
+    TodoList
+  },
   data() {
     return {
       newTodoTitle: "",
@@ -32,10 +33,10 @@ export default {
   },
   methods: {
     ...mapActions("todos", ["addTodo"]),
-    addTodo() {
-      if (this.newTodoTitle.trim() === "") return; // prevent empty todo
+    handleAddTodo() {
+      if (!this.newTodoTitle.trim()) return;
       this.addTodo(this.newTodoTitle);
-      this.newTodoTitle = ""; // Reset input field after submit
+      this.newTodoTitle = "";
     },
   },
 };
@@ -43,40 +44,17 @@ export default {
 
 <style scoped>
 .todos-container {
-  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
   background-color: #f8f8f8;
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.todos {
-  margin-top: 20px;
-}
-
-.todo {
-  background-color: #ffffff;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-input {
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-button {
-  padding: 10px 15px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
+h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 </style>
